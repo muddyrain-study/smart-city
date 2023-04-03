@@ -7,7 +7,6 @@ import FlyLineShader from "./FlyLineShader";
 import MeshLine from "./meshLine";
 import LightWall from "./LightWall";
 import LightRadar from "./LightRadar";
-import AlarmSprite from "./AlarmSprite";
 
 export default function createCity() {
   const gltfLoader = new GLTFLoader();
@@ -31,24 +30,5 @@ export default function createCity() {
     // 添加飞线
     const flyLine = new FlyLine();
     scene.add(flyLine.mesh);
-
-    // 添加装饰器飞线
-    const flyLineShader = new FlyLineShader();
-    scene.add(flyLineShader.mesh);
-
-    // 添加光墙
-    const lightWall = new LightWall();
-    scene.add(lightWall.mesh);
-
-    // 添加雷达
-    const lightRadar = new LightRadar();
-    scene.add(lightRadar.mesh);
-
-    // 添加警告标识
-    const alarmSprite = new AlarmSprite();
-    scene.add(alarmSprite.mesh);
-    alarmSprite.onClick(() => {
-      console.log("警告");
-    });
   });
 }

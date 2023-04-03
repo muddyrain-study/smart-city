@@ -1,17 +1,40 @@
 <template>
   <div id="bigScreen">
-    <div class="header">老陈智慧城市管理系统平台</div>
+    <div class="header">智慧城市管理系统平台</div>
     <div class="main">
       <div class="left">
-        <div class="cityEvent">
+        <div class="cityEvent" v-for="(item, key) in dataInfo" :key="key">
           <h3>
-            <span>治安</span>
+            <span>{{ item.name }}</span>
           </h3>
           <h1>
             <img src="../assets/bg/bar.svg" class="icon" />
-            <span>100台</span>
+            <span>{{ toFixInt(item.number) }}（{{ item.unit }}）</span>
           </h1>
           <div class="footerBoder"></div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="cityEvent list">
+          <h3>
+            <span>事件列表</span>
+          </h3>
+          <ul>
+            <li
+              v-for="(item, i) in props.eventList"
+              :class="{ active: currentActive == i }"
+              @click="toggleEvent(i)"
+            >
+              <h1>
+                <div>
+                  <img class="icon" :src="imgs[item.name]" />
+                  <span>{{ item.name }}</span>
+                </div>
+                <span class="time">{{ item.time }}</span>
+              </h1>
+              <p>{{ item.type }}</p>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -19,9 +42,28 @@
 </template>
 
 <script setup>
+import eventHub from "@/utils/eventHub";
 import { ref } from "vue";
-const a = () => {
-  console.log(1);
+const props = defineProps(["dataInfo", "eventList"]);
+const imgs = {
+  电力: require("@/assets/bg/dianli.svg"),
+  火警: require("@/assets/bg/fire.svg"),
+  治安: require("@/assets/bg/jingcha.svg"),
+};
+
+const toFixInt = (num) => {
+  return num.toFixed(0);
+};
+
+const currentActive = ref(null);
+eventHub.on("spriteClick", (data) => {
+  // console.log(data);
+  currentActive.value = data.i;
+});
+
+const toggleEvent = (i) => {
+  currentActive.value = i;
+  eventHub.emit("eventToggle", i);
 };
 </script>
 
