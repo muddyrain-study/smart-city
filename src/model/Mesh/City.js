@@ -5,6 +5,7 @@ import modifycityMaterial from "../modify/modifyCityMaterial";
 import FlyLine from "./FlyLine";
 import FlyLineShader from "./FlyLineShader";
 import MeshLine from "./meshLine";
+import LightWall from "./LightWall";
 
 export default function createCity() {
   const gltfLoader = new GLTFLoader();
@@ -32,5 +33,9 @@ export default function createCity() {
     // 添加装饰器飞线
     const flyLineShader = new FlyLineShader();
     scene.add(flyLineShader.mesh);
+
+    // 添加光墙
+    const lightWall = new LightWall();
+    scene.add(lightWall.mesh);
   });
 }
