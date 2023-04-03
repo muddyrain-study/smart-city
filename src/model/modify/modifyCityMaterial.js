@@ -12,6 +12,8 @@ export default function modifycityMaterial(mesh) {
     );
     addGradColor(shader, mesh);
     addSpread(shader);
+    addLightLine(shader);
+    addToTopLine(shader);
   };
 }
 
@@ -113,7 +115,87 @@ export function addSpread(shader) {
 
   gsap.to(shader.uniforms.uSpreadTime, {
     value: 800,
-    duration: 2,
+    duration: 3,
+    ease: "none",
+    repeat: -1,
+  });
+}
+
+/**
+ * 添加光带
+ * @param {*} shader
+ */
+export function addLightLine(shader) {
+  // 设置扩散的时间
+  shader.uniforms.uLightLineTime = { value: -1000 };
+  // 设置条带的宽度
+  shader.uniforms.uLightLineWidth = { value: 400 };
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    SHAHDER_COMMON,
+    `
+    ${SHAHDER_COMMON}
+    uniform float uLightLineTime;
+    uniform float uLightLineWidth;
+    `
+  );
+  shader.fragmentShader = shader.fragmentShader.replace(
+    SHAHDER_END,
+    `
+    // 设置扩散范围的函数
+    float LightLineMix = -(vPosition.x + vPosition.z - uLightLineTime) * (vPosition.x + vPosition.z - uLightLineTime) + uLightLineWidth;
+
+    if(LightLineMix > 0.0){
+        // gl_FragColor = mix(gl_FragColor,vec4(1.0,1.0,1.0,1.0),LightLineMix / uLightLineWidth);
+        gl_FragColor = mix(gl_FragColor,vec4(1.0,0.8,0.8,1.0),LightLineMix / uLightLineWidth);
+    } 
+    ${SHAHDER_END}
+    `
+  );
+
+  gsap.to(shader.uniforms.uLightLineTime, {
+    value: 1500,
+    duration: 4,
+    ease: "none",
+    repeat: -1,
+  });
+}
+
+/**
+ * 添加光带 向上
+ * @param {*} shader
+ */
+export function addToTopLine(shader) {
+  // 设置扩散的时间
+  shader.uniforms.uToTopTime = { value: 0 };
+  // 设置条带的宽度
+  shader.uniforms.uToTopWidth = { value: 400 };
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    SHAHDER_COMMON,
+    `
+    ${SHAHDER_COMMON}
+    uniform float uToTopTime;
+    uniform float uToTopWidth;
+    `
+  );
+  shader.fragmentShader = shader.fragmentShader.replace(
+    SHAHDER_END,
+    `
+    // 设置扩散范围的函数
+    float ToTopMix = -(vPosition.y - uToTopTime) * (vPosition.y - uToTopTime) + uToTopWidth;
+
+    if(ToTopMix > 0.0){
+        // gl_FragColor = mix(gl_FragColor,vec4(1.0,1.0,1.0,1.0),ToTopMix / uToTopWidth);
+        gl_FragColor = mix(gl_FragColor,vec4(0.8,0.8,1.0,1.0),ToTopMix / uToTopWidth);
+    } 
+    ${SHAHDER_END}
+    `
+  );
+
+  gsap.to(shader.uniforms.uToTopTime, {
+    value: 500,
+    duration: 3,
     ease: "none",
     repeat: -1,
   });
