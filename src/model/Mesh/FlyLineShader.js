@@ -16,10 +16,23 @@ export default class FlyLineShader {
     const points = this.lineCurve.getPoints(1000);
     this.geometry = new THREE.BufferGeometry().setFromPoints(points);
 
+    // 给每个顶点 设置属性
+    const aSizeArray = new Float32Array(points.length);
+    for (let i = 0; i < aSizeArray.length; i++) {
+      aSizeArray[i] = i;
+    }
+    // 设置几何体顶点属性
+    this.geometry.setAttribute(
+      "aSize",
+      new THREE.BufferAttribute(aSizeArray, 1)
+    );
     // 设置着色器材质
     this.shaderMaterial = new THREE.ShaderMaterial({
       vertexShader,
       fragmentShader,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
     });
 
     this.mesh = new THREE.Points(this.geometry, this.shaderMaterial);
