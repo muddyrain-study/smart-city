@@ -5,7 +5,7 @@ export default class FlyLine {
   constructor() {
     let linePoints = [
       new THREE.Vector3(0, 0, 0),
-      new THREE.Vector3(8, 4, 0),
+      new THREE.Vector3(5, 4, 0),
       new THREE.Vector3(10, 0, 0),
     ];
     // 创建曲线
