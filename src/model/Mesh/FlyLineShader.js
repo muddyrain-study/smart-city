@@ -28,6 +28,17 @@ export default class FlyLineShader {
     );
     // 设置着色器材质
     this.shaderMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: {
+          value: 0,
+        },
+        uLength: {
+          value: points.length,
+        },
+        uColor: {
+          value: new THREE.Color(0xffff00),
+        },
+      },
       vertexShader,
       fragmentShader,
       transparent: true,
@@ -36,5 +47,12 @@ export default class FlyLineShader {
     });
 
     this.mesh = new THREE.Points(this.geometry, this.shaderMaterial);
+    // 改变 uTime 来控制动画
+
+    gsap.to(this.shaderMaterial.uniforms.uTime, {
+      value: 1000,
+      duration: 1,
+      repeat: -1,
+    });
   }
 }
