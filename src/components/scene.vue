@@ -15,6 +15,7 @@ import FlyLineShader from "@/model/Mesh/FlyLineShader";
 import LightRadar from "@/model/Mesh/LightRadar";
 import LightWall from "@/model/Mesh/LightWall";
 import eventHub from "@/utils/eventHub";
+import controls from "@/model/controls";
 
 // 场景元素
 const sceneDiv = ref(null);
@@ -61,7 +62,27 @@ let mapFn = {
     eventListMesh.push(lightRadar);
   },
 };
-
+eventHub.on("eventToggle", (i) => {
+  // eventListMesh.forEach((item) => {
+  //   if (item.eventListIndex === i) {
+  //     item.mesh.visible = true;
+  //   } else {
+  //     item.mesh.visible = false;
+  //   }
+  // });
+  const position = {
+    x: props.eventList[i].position.x / 5 - 10,
+    y: 0,
+    z: props.eventList[i].position.y / 5 - 10,
+  };
+  //   controls.target.set(position.x, position.y, position.z);
+  gsap.to(controls.target, {
+    duration: 1,
+    x: position.x,
+    y: position.y,
+    z: position.z,
+  });
+});
 let eventListMesh = [];
 function watchPointer(mesh) {
   // 创建射线
