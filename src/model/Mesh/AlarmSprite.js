@@ -22,13 +22,13 @@ export default class AlarmSprite {
     // 设置位置
     this.mesh.position.set(position.x, 3.5, position.z);
     // 点击事件
-    this.fns = [];
+    this.clickFns = [];
 
     // 创建射线
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
 
-    // 事件的监听
+    // 点击事件的监听
     window.addEventListener("click", (e) => {
       this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
@@ -39,12 +39,12 @@ export default class AlarmSprite {
       e.alarm = this;
       const intersects = this.raycaster.intersectObject(this.mesh);
       if (intersects.length > 0) {
-        this.fns.forEach((fn) => fn(e));
+        this.clickFns.forEach((fn) => fn(e));
       }
     });
   }
   onClick(fn) {
-    this.fns.push(fn);
+    this.clickFns.push(fn);
   }
   remove() {
     this.mesh.remove();

@@ -63,6 +63,24 @@ let mapFn = {
 };
 
 let eventListMesh = [];
+function watchPointer(mesh) {
+  // 创建射线
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  const handleMove = (e) => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(spriteMesh);
+    if (intersects.length > 0) {
+      document.body.style.cursor = "pointer";
+    } else {
+      document.body.style.cursor = "default";
+    }
+  };
+  window.addEventListener("mousemove", handleMove, false);
+}
+let spriteMesh = [];
 watch(
   () => props.eventList,
   (value) => {
@@ -70,6 +88,7 @@ watch(
       item.remove();
     });
     eventListMesh = [];
+    spriteMesh = [];
     // 创建物体
     props.eventList.forEach((item, i) => {
       const position = {
@@ -84,10 +103,12 @@ watch(
       scene.add(alarmSprite.mesh);
       eventListMesh.push(alarmSprite);
       scene.add(alarmSprite.mesh);
+      spriteMesh.push(alarmSprite.mesh);
       if (mapFn[item.name]) {
         mapFn[item.name](position, i);
       }
     });
+    watchPointer();
   }
 );
 </script>
